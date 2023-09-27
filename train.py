@@ -79,9 +79,9 @@ elif config['model']['type'] == "GPT2":
         n_embd=config['model']['hidden_size'],
         n_layer=config['model']['n_layer'],
         n_head=config['model']['n_head'],
-        resid_pdrop=config['model']['resid_pdrop'],
-        embd_pdrop=config['model']['embd_pdrop'],
-        attn_pdrop=config['model']['attn_pdrop'],
+        # resid_pdrop=config['model']['resid_pdrop'],
+        # embd_pdrop=config['model']['embd_pdrop'],
+        # attn_pdrop=config['model']['attn_pdrop'],
         pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
     )
     model = GPT2LMHeadModel(model_config)
@@ -92,10 +92,10 @@ elif config['model']['type'] == "GPTJ":
         n_embd=config['model']['hidden_size'],
         n_layer=config['model']['n_layer'],
         n_head=config['model']['n_head'],
-        resid_pdrop=config['model']['resid_pdrop'],
-        embd_pdrop=config['model']['embd_pdrop'],
-        attn_pdrop=config['model']['attn_pdrop'],
-        tie_word_embeddings=config['model']['tie_word_embeddings'],
+        # resid_pdrop=config['model']['resid_pdrop'],
+        # embd_pdrop=config['model']['embd_pdrop'],
+        # attn_pdrop=config['model']['attn_pdrop'],
+        # tie_word_embeddings=config['model']['tie_word_embeddings'],
         pad_token_id=tokenizer.convert_tokens_to_ids("<pad>"),
     )
     model = GPTJForCausalLM(model_config)
