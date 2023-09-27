@@ -1,5 +1,5 @@
 data:
-  tokenizer_path: "./models/gpt-clean-16000.json"
+  tokenizer_path: "./data/models/gpt-clean-16000.json"
   train_path: "./data/babylm_10M_clean"
   eval_path: "./data/babylm_dev_clean"
   seq_length: 128
@@ -21,8 +21,7 @@ training:
   warmup_steps: 300
   fp16: True
 
-logging: 
+logging:
   wandb: True
   project: "babylm-dev"
   output_dir: "./models/"
-
