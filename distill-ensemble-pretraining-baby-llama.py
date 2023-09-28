@@ -10,7 +10,7 @@ from transformers import (
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import  Subset
+from torch.utils.data import Subset
 from random import sample
 
 from pathlib import Path
@@ -33,33 +33,32 @@ ALPHA = 0.5
 PATH = Path("./")
 
 teacher_dir1 = PATH / 'models/Llama-360M'
-teacher_dir2 = PATH / 'models/gpt-705M'
+teacher_dir2 = PATH / 'models/GPT2-705M'
 
 
 MODEL_NAME = f'Baby-Llama-58M'
-MODEL_OUTPUT = Path('./models') /  MODEL_NAME
+MODEL_OUTPUT = Path('./models') / MODEL_NAME
 EVAL_SAMPLES = 8192
 
 
 wandb_log = True
 
 
-
 tokenizer_path = PATH / "models/gpt-clean-16000.json"
-tokenizer = GPT2TokenizerFast(tokenizer_file= str(tokenizer_path))
+tokenizer = GPT2TokenizerFast(tokenizer_file=str(tokenizer_path))
 tokenizer.bos_token = "<s>"
 tokenizer.eos_token = "</s>"
 tokenizer.pad_token = "<pad>"
 
 # in the original code I had random_chunk = False
 # random_chunk=True is expected to improve the model performance a bit
-train_dataset = BabylmDataset(PATH / "data/babylm_10M_clean", SEQ_LENGTH, tokenizer=tokenizer, random_chunk=True)
-full_eval_dataset = BabylmDataset(PATH / "data/babylm_dev_clean", SEQ_LENGTH, tokenizer=tokenizer, offset=0)
+train_dataset = BabylmDataset(
+    PATH / "data/babylm_10M_clean", SEQ_LENGTH, tokenizer=tokenizer, random_chunk=True)
+full_eval_dataset = BabylmDataset(
+    PATH / "data/babylm_dev_clean", SEQ_LENGTH, tokenizer=tokenizer, offset=0)
 
 eval_indices = sample(range(len(full_eval_dataset)), EVAL_SAMPLES)
 eval_dataset = Subset(full_eval_dataset, eval_indices)
-
-
 
 
 tokenizer.model_max_length = SEQ_LENGTH
@@ -93,7 +92,6 @@ data_collator = DataCollatorForLanguageModeling(
 print(f'model num parameters: student = {student.num_parameters()}')
 print(f'model num parameters: teacher1 = {teacher1.num_parameters()}')
 print(f'model num parameters: teacher2 = {teacher2.num_parameters()}')
-
 
 
 #  Distillation Trainer
@@ -137,13 +135,15 @@ class DistillationTrainer(Trainer):
         loss_function = nn.KLDivLoss(reduction="batchmean")
         loss_logits = (
             loss_function(
-                F.log_softmax(outputs_student.logits / self.args.temperature, dim=-1),
+                F.log_softmax(outputs_student.logits /
+                              self.args.temperature, dim=-1),
                 F.softmax(avg_teacher_logits / self.args.temperature, dim=-1),
             )
             * (self.args.temperature ** 2)
         )
         # Return weighted student loss
-        loss = self.args.alpha * student_loss + (1.0 - self.args.alpha) * loss_logits
+        loss = self.args.alpha * student_loss + \
+            (1.0 - self.args.alpha) * loss_logits
         return (loss, outputs_student) if return_outputs else loss
 
 
@@ -152,20 +152,17 @@ if wandb_log:
     wandb.init(project='babylm', name=MODEL_NAME)
 
 
-
-
-
 training_args = DistillationTrainingArguments(
     output_dir=MODEL_OUTPUT,
     overwrite_output_dir=True,
-    save_strategy = "epoch",
-    evaluation_strategy = "epoch",
+    save_strategy="epoch",
+    evaluation_strategy="epoch",
     num_train_epochs=6,
     gradient_accumulation_steps=1,
     per_device_train_batch_size=BATCH_SIZE,
     save_total_limit=1,  # Set to zero to avoid saving
     report_to="wandb",
-    warmup_steps=200, 
+    warmup_steps=200,
     lr_scheduler_type="cosine",
     learning_rate=LR,
     logging_steps=20,
@@ -179,14 +176,14 @@ training_args = DistillationTrainingArguments(
 
 
 trainer = DistillationTrainer(
-        student,
-        training_args,
-        teacher_models=teachers,
-        data_collator=data_collator,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
+    student,
+    training_args,
+    teacher_models=teachers,
+    data_collator=data_collator,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
 
-    )
+)
 
 
 trainer.train()
@@ -194,14 +191,3 @@ trainer.train()
 
 trainer.save_model(MODEL_OUTPUT)
 tokenizer.save_pretrained(MODEL_OUTPUT)
-
-
-
-
-
-
-
-
-
-
-
