@@ -3,7 +3,7 @@ data:
   train_path: "./data/nowandme_clean"
   eval_path: "./data/nowandme_dev_clean"
   seq_length: 256
-  eval_samples: 8192
+  eval_samples: 4096
 
 model:
   type: "GPT2" # or "GPT2"
