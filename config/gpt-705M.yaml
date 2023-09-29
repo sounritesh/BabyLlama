@@ -1,15 +1,15 @@
 data:
-  tokenizer_path: "./models/gpt-clean-16000.json"
-  train_path: "./data/babylm_10M_clean"
-  eval_path: "./data/babylm_dev_clean"
-  seq_length: 128
+  tokenizer_path: "./models/nm-gpt-clean-16000.json"
+  train_path: "./data/nowandme_clean"
+  eval_path: "./data/nowandme_dev_clean"
+  seq_length: 256
   eval_samples: 8192
 
 model:
   type: "GPT2" # or "GPT2"
   name: "GPT2-705M"
   hidden_size: 1536
-  intermediate_size: 3072 # train.py uses default = 4 * hidden_size 
+  intermediate_size: 3072 # train.py uses default = 4 * hidden_size
   n_layer: 24
   n_head: 16 # Change this if you're using GPT2
 
@@ -21,8 +21,7 @@ training:
   warmup_steps: 300
   fp16: True
 
-logging: 
+logging:
   wandb: True
-  project: "babylm-dev"
+  project: "nowandme-dev"
   output_dir: "./models/"
-
