@@ -21,7 +21,7 @@ prompt = args.prompt
 inputs = tokenizer(prompt, return_tensors="pt")
 
 # Generate
-generate_ids = model.generate(inputs.input_ids, max_length=10)
+generate_ids = model.generate(inputs.input_ids, max_length=20)
 decoded = tokenizer.batch_decode(generate_ids, skip_special_tokens=True,
                                  clean_up_tokenization_spaces=False)[0]
 
