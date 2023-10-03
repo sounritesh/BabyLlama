@@ -1,15 +1,20 @@
-from transformers import AutoTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, LlamaForCausalLM, GPT2LMHeadModel
 import ArgumentParser from argparse
 
 parser = ArgumentParser()
 
 parser.add_argument("--model_path", type=str, default=None)
 parser.add_argument("--tokenizer_path", type=str, default=None)
+parser.add_argument("--model_type", type=str, default="gpt2")
 parser.add_argument("--prompt", type=str,
                     default="Hey, are you conscious? Can you talk to me?")
+
 args = parser.parse_args()
 
-model = LlamaForCausalLM.from_pretrained(args.model_path)
+if args.model_type == "gpt2":
+    model = GPT2LMHeadModel.from_pretrained(args.model_path)
+else:
+    model = LlamaForCausalLM.from_pretrained(args.model_path)
 tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_path)
 
 prompt = args.prompt
