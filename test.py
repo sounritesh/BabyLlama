@@ -1,5 +1,5 @@
 from transformers import AutoTokenizer, LlamaForCausalLM, GPT2LMHeadModel
-import ArgumentParser from argparse
+from argparse import ArgumentParser
 
 parser = ArgumentParser()
 
