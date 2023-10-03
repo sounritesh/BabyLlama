@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, LlamaForCausalLM, GPT2LMHeadModel
+from transformers import AutoTokenizer, LlamaForCausalLM, GPT2LMHeadModel, Tokenizer
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
@@ -15,7 +15,7 @@ if args.model_type == "gpt2":
     model = GPT2LMHeadModel.from_pretrained(args.model_path)
 else:
     model = LlamaForCausalLM.from_pretrained(args.model_path)
-tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_path)
+tokenizer = Tokenizer.from_file(str(args.tokenizer_path))
 
 prompt = args.prompt
 inputs = tokenizer(prompt, return_tensors="pt")
